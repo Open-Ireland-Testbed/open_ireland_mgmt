@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Variables for theme */
+:root {
+  --background-hue: 270;
+  --background-saturation: 70%;
+  --background-lightness: 95%;
+  --accent-hue: 270;
+  --accent-saturation: 70%;
+  --accent-lightness: 50%;
+  --accent-light-lightness: 60%;
+  --accent-dark-lightness: 65%;
+}
+
+/* Glass morphism utilities (placeholder - to be implemented) */
+.glass-panel {
+  /* TODO: Implement glass panel styles */
+}
+
+.glass-button {
+  /* TODO: Implement glass button styles */
+}
+
+.glass-card {
+  /* TODO: Implement glass card styles */
+}
+
+.glass-input {
+  /* TODO: Implement glass input styles */
+}
+

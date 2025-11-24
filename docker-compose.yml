@@ -1,0 +1,66 @@
+version: "3.3"
+
+services:
+  backend:
+    container_name: openireland-backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      - BACKEND_PORT=20001
+      - FRONTEND_URL=http://localhost:25002
+      - DEBUG=True
+      - DATABASE_URL=mysql+pymysql://openireland:ChangeMe_Dev123%21@172.17.0.1:3306/provdb_dev
+    volumes:
+      - ./backend:/app/backend
+    ports:
+      - "25001:20001"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    networks:
+      - openireland-network
+
+  scheduler-frontend:
+    container_name: openireland-scheduler-frontend
+    build:
+      context: scheduler/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "25002:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:25001
+      - PORT=3000
+    volumes:
+      - ./scheduler/frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - openireland-network
+
+  inventory-frontend:
+    container_name: openireland-inventory-frontend
+    build:
+      context: inventory/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "25003:3001"
+    environment:
+      - REACT_APP_API_URL=http://localhost:25001
+      - REACT_APP_SCHEDULER_API_URL=http://localhost:25001
+      - PORT=3001
+    volumes:
+      - ./inventory/frontend:/app
+      - ./packages/ui:/app/packages/ui
+      - /app/node_modules
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - openireland-network
+
+networks:
+  openireland-network:
+    driver: bridge

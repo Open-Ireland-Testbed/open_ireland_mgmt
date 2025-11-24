@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Open Ireland Lab Inventory Management" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <title>Open Ireland Lab - Inventory Management</title>
+  <!-- Suppress ResizeObserver errors BEFORE React loads -->
+  <script>
+    (function() {
+      const originalError = window.onerror;
+      window.onerror = function(message, source, lineno, colno, error) {
+        if (message && typeof message === 'string' && message.includes('ResizeObserver')) {
+          return true;
+        }
+        if (originalError) {
+          return originalError.call(this, message, source, lineno, colno, error);
+        }
+        return false;
+      };
+      window.addEventListener('error', function(e) {
+        if (e.message && typeof e.message === 'string' && e.message.includes('ResizeObserver')) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          return false;
+        }
+      }, true);
+      window.addEventListener('unhandledrejection', function(e) {
+        const reason = e.reason ? (e.reason.toString ? e.reason.toString() : String(e.reason)) : '';
+        if (reason.includes('ResizeObserver')) {
+          e.preventDefault();
+        }
+      });
+    })();
+  </script>
+</head>
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+</body>
+</html>
+

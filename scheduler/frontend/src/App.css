@@ -1,0 +1,1948 @@
+/* ================== Overall Container ================== */
+.app-container {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+}
+
+/* ================== Header ================== */
+.app-header {
+  display: flex;
+  align-items: center;
+  background-color: #aaaaaa;
+  padding: 0px 16px;
+  position: relative;
+}
+
+.light-mode {
+  background-color: #f9f9fb;
+  color: #2d3748;
+}
+
+
+
+.dark-mode-toggle {
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.3s ease-in-out;
+}
+
+.light-mode .dark-mode-toggle {
+  color: #333;
+}
+
+.dark-mode .dark-mode-toggle {
+  color: #ffffff;
+}
+
+
+/* Switch color in dark mode */
+.dark-mode img:not(.dark-keep-original) {
+  filter: invert(1) brightness(1.8);
+}
+
+/* keep original color */
+.dark-mode .dark-keep-original {
+  filter: none !important;
+}
+
+
+.light-mode img {
+  filter: none !important;
+}
+
+/* ================== Logo and Title ================== */
+.app-logo {
+  width: 230px;
+  height: auto;
+}
+
+.app-title {
+  font-size: 1.8rem;
+  color: black;
+  flex-grow: 1;
+  text-align: left;
+  font-family: 'Courier New', monospace;
+}
+
+/* ================== Login pop-up window style ================== */
+.login-container {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  position: relative;
+}
+
+.login-tooltip {
+  position: absolute;
+  top: -30px;
+  left: 0;
+  padding: 4px 8px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  transform: translateX(-10%);
+}
+
+
+.user-login-icon {
+  width: 40px;
+  height: auto;
+  cursor: pointer;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  backdrop-filter: blur(3px);
+}
+
+.popup-panel {
+  position: absolute;
+  top: 100px;
+  right: 20px;
+  width: 220px;
+  background-color: #fff;
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 32px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  transform: translateY(-20px);
+  opacity: 0;
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+
+.popup-title {
+  color: #1f618d;
+  font-weight: bold;
+  margin: 5px 0 3px;
+}
+
+.popup-panel input {
+  padding: 12px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.popup-panel input:focus {
+  border-color: #4dabf7;
+  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+  outline: none;
+}
+
+
+.popup-panel button {
+  background: linear-gradient(135deg, #4dabf7, #2196F3);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(77, 171, 247, 0.3);
+  width: 100%;
+  margin-top: 15px;
+}
+
+.popup-panel button:hover {
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(77, 171, 247, 0.4);
+}
+
+.switch-link {
+  color: #3498db;
+  font-size: 0.95rem;
+  margin: 15px 0;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.switch-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.3s ease;
+}
+
+.switch-link:hover {
+  color: #2980b9;
+}
+
+.switch-link:hover::after {
+  width: 100%;
+}
+
+.welcome-username {
+  margin-right: 20px;
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-container input {
+  padding-right: 30px;
+}
+
+.toggle-password-icon {
+  width: 20px;
+  height: 20px;
+  margin-left: -30px;
+  cursor: pointer;
+}
+
+/* Go to Admin side */
+.admin-link-button {
+  margin-right: 20px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #aaaaaa, #8e8e8e);
+  color: white !important;
+  border: none !important;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.admin-link-button:hover {
+  background: linear-gradient(135deg, #1976D2, #1565C0);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+  text-decoration: underline;
+}
+
+
+/* dark mode for logn and register pop-up panel */
+.dark-mode .admin-link-button {
+  background: linear-gradient(135deg, #2d3748, #4a5568);
+  box-shadow: 0 4px 15px rgba(45, 55, 72, 0.3);
+}
+
+.dark-mode .admin-link-button:hover {
+  background: linear-gradient(135deg, #4a5568, #2d3748);
+}
+
+.dark-mode .popup-panel {
+  background: #2d2d2d;
+  border-color: #444;
+}
+
+.dark-mode .popup-title {
+  color: #90caf9;
+}
+
+.dark-mode .popup-panel input {
+  background: #333;
+  border-color: #555;
+  color: white;
+}
+
+.dark-mode .switch-link {
+  color: #90caf9;
+}
+
+.dark-mode .switch-link:hover {
+  color: #64b5f6;
+}
+
+
+/* ================== Main Container ================== */
+.main-container {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  overflow: hidden;
+  background: linear-gradient(175deg,
+      rgba(248, 249, 251, 0.6) 0%,
+      rgba(245, 247, 250, 0.8) 100%);
+}
+
+/* ================== Left Panel ================== */
+.left-panel {
+  width: 5%;
+  min-width: 300px;
+  padding: 20px;
+  box-sizing: border-box;
+  border-right: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ================== Middle Panel ================== */
+.middle-panel {
+  width: 75%;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* ================== Right Panel ================== */
+/* Right panel is now divided into two vertical sections */
+.right-panel {
+  width: 20%;
+  min-width: 200px;
+  padding: 20px;
+  box-sizing: border-box;
+  border-left: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* ================== Button Group ================== */
+.button-group {
+  display: flex;
+  margin-bottom: 15px;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+.mode-button {
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 25px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+  color: #4a5568;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bolder;
+}
+
+.mode-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(145deg, #e9ecef, #dee2e6);
+}
+
+.mode-button.selected {
+  background: linear-gradient(135deg, #4dabf7, #2196F3);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+}
+
+/* ================== Calendar Container ================== */
+.calendar-container {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.react-calendar {
+  max-width: 100%;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  font-family: 'Segoe UI', system-ui;
+  transition: all 0.3s ease;
+}
+
+/* Navagation */
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 8px;
+}
+
+.react-calendar__navigation button {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: #4a5568;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.react-calendar__navigation button:hover {
+  background: #4dabf7 !important;
+  color: white !important;
+  border-color: #4dabf7 !important;
+}
+
+.react-calendar__navigation__label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+/* Weekdays */
+.react-calendar__month-view__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  color: #718096;
+  padding: 8px 4px;
+  font-size: 1rem;
+  text-align: center;
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.react-calendar__month-view__days {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+/* Day cells */
+.react-calendar__tile {
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px;
+  background: #f8fafc;
+  color: #4a5568;
+  transition: all 0.2s ease;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  line-height: 1;
+  padding: 8px !important;
+}
+
+
+.react-calendar__tile:enabled:hover {
+  background: #4dabf7;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(77, 171, 247, 0.3);
+}
+
+.react-calendar__tile--now {
+  background: #87CEEB !important;
+  color: white !important;
+  font-weight: 700;
+}
+
+.react-calendar__tile--active {
+  background: #4dabf7 !important;
+  color: white !important;
+  font-weight: 700;
+}
+
+/* Range mode */
+.react-calendar__tile--range {
+  background: #9cbad7 !important;
+  color: #2d3748 !important;
+  border-radius: 0;
+}
+
+.react-calendar__tile--rangeStart,
+.react-calendar__tile--rangeEnd {
+  background: #4dabf7 !important;
+  color: white !important;
+  border-radius: 8px !important;
+}
+
+
+/* ================== Reservation Information Buttons ================== */
+.reservation-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.reservation-button {
+  position: relative;
+  margin: 5px 0;
+  padding: 8px 12px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  width: 200px;
+  cursor: pointer;
+  background-color: #4dabf7;
+  border: 1px solid #4dabf7;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  color: white;
+}
+
+.reservation-button:hover {
+  background-color: #339af0;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(77, 171, 247, 0.3);
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-left: 20px;
+}
+
+.user-page-button-icon {
+  position: absolute;
+  left: 12px;
+  width: 30px;
+  height: 30px;
+}
+
+
+.back-button:hover {
+  background-color: #cccccc;
+}
+
+
+
+.back-icon {
+  width: 20px;
+  height: auto;
+  margin-right: 8px;
+}
+
+.delete-all-button {
+  margin-right: 20px;
+  float: right;
+  display: flex;
+  justify-content: flex-start;
+  font-size: 1rem;
+  padding: 8px 16px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: background-color 0.2s, border-color 0.2s;
+  border-radius: 12px;
+}
+
+.delete-all-button:hover {
+  background-color: #cccccc;
+}
+
+/* ================== User's Booking table ================== */
+.manage-bookings-container {
+  width: 100%;
+  padding-right: 20px;
+}
+
+.bookings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.left-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex: 1;
+}
+
+.table-scroll-container {
+  overflow-y: auto;
+  max-height: 78vh;
+  width: 100%;
+  margin: 1rem 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  background: white;
+}
+
+.no-bookings {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.5rem;
+  color: #666;
+}
+
+
+.booking-table {
+  width: 100%;
+  border-collapse: separate;
+  min-width: 1200px;
+  background: white;
+  border-radius: 12rem;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.booking-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f8f9fa;
+}
+
+
+.booking-table th {
+  background: #f8f9fa !important;
+  padding: 12px 15px !important;
+  text-align: center !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+  color: #4a5568 !important;
+  font-weight: 800 !important;
+  position: relative;
+}
+
+.booking-table td {
+  padding: 12px 15px !important;
+  border-bottom: 1px solid #edf2f7 !important;
+  text-align: center !important;
+  color: #718096 !important;
+  font-weight: bold !important;
+}
+
+.booking-table tr:hover {
+  background-color: #e0efff;
+}
+
+
+.status-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.85em;
+  font-weight: 600 !important;
+}
+
+
+.status-tag.pending {
+  background: #fde79c;
+  color: #856404;
+}
+
+.status-tag.confirmed {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.status-tag.expired,
+.status-tag.cancelled {
+  background: #f0f0f0;
+  color: #666666;
+}
+
+
+.action-buttons {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.cancel-btn {
+  background: #ff6b6b !important;
+  color: white !important;
+  padding: 6px 12px !important;
+  border: none !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  transition: opacity 0.2s !important;
+  font-weight: bold !important;
+}
+
+.cancel-btn:hover {
+  opacity: 0.9 !important;
+  background: #ff5252;
+}
+
+.delete-btn {
+  background: #ff6b6b !important;
+  color: white !important;
+  padding: 6px 12px !important;
+  border: none !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  transition: opacity 0.2s !important;
+  font-weight: bold !important;
+}
+
+.delete-btn:hover {
+  background: #ff5252;
+  opacity: 0.9 !important;
+}
+
+/* ================== Schedule Table Container ================== */
+.schedule-table-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  max-width: auto;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease;
+}
+
+.schedule-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 15px 0 !important;
+  gap: 16px !important;
+}
+
+.sche-search-box {
+  position: relative;
+  display: flex;
+  margin-right: 100px;
+  gap: 8px;
+  flex: 1;
+  max-width: 400px;
+}
+
+.sche-search-box input {
+  height: 30px;
+  width: 100%;
+  padding: 0 12px 0 36px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.sche-search-box input:focus {
+  border-color: #4dabf7;
+  outline: none;
+}
+
+/* .sche-search-button {
+  padding: 4px 8px;
+  font-weight: bold;
+  background: #4dabf7;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.sche-search-button:hover {
+  background: #339af0;
+} */
+
+/* Switch color in dark mode */
+.dark-mode .sche-search-box .search-icon {
+  filter: invert(1) brightness(2);
+}
+
+/* Keep the original color in light mode */
+.light-mode .sche-search-box .search-icon {
+  filter: none;
+}
+
+
+.sche-navigation-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sche-navigation-controls button {
+  padding: 8px 16px;
+  background: #4dabf7;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.sche-navigation-controls button:hover {
+  background: #339af0;
+}
+
+
+.month-year {
+  margin: 10px 20px;
+  font-weight: bold;
+}
+
+/* ================== Days Row ================== */
+.placeholder-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.device-label {
+  color: #555;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.days-row {
+  display: grid !important;
+  margin-bottom: 15px !important;
+  grid-template-columns: 240px repeat(7, 1fr);
+  column-gap: 2px;
+}
+
+.day-column-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  padding: 8px;
+  text-align: center;
+}
+
+.user-weekday.highlight {
+  color: #0084ff;
+}
+
+.user-daynum.highlight {
+  color: #0084ff;
+}
+
+
+
+.user-weekday {
+  color: #6c757d;
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+}
+
+.user-daynum {
+  color: #2c3e50;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+
+
+/* ================== Legend ================== */
+.legend-container {
+  display: flex !important;
+  justify-content: flex-end;
+  gap: 24px !important;
+  padding: 8px 16px !important;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 2px 4px;
+  border-radius: 12px;
+}
+
+.legend-color {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+}
+
+.legend-text {
+  font-size: 1rem;
+}
+
+
+/* ================== Loading device indicator ================== */
+.loading-devices-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin: 10px 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  font-size: larger;
+  font-weight: bold;
+}
+
+.loading-spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.no-devices-message {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+
+/* ================== Devices Table ================== */
+.schedule-table {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.devices-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.device-row {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-width: fit-content;
+}
+
+.device-name {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: #27ae60;
+  font-weight: 600;
+  white-space: nowrap;
+  min-width: 220px;
+  padding: 6px 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-left: 3px solid #3498db;
+}
+
+.device-main-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #27ae60;
+  line-height: 1.2;
+}
+
+.device-polatis-name {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #888888;
+  font-style: italic;
+}
+
+.device-type-name {
+  color: #2c3e50;
+  /* Dark blue-gray for hierarchy */
+  font-size: 1.2rem;
+  font-weight: 600;
+  white-space: nowrap;
+  /* Prevent line breaks */
+  min-width: 200px;
+  /* Minimum width to avoid squeezing */
+  padding: 8px 15px;
+  background: #f8f9fa;
+  /* Subtle background */
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.expand-button {
+  margin-left: 6px;
+  padding: 2px 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.collapse-all-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.0rem;
+  color: #555;
+  padding: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.collapse-all-btn:hover {
+  color: #000;
+}
+
+.header-with-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Each day-column holds the 3 time slots vertically */
+
+
+.subdevice-divider {
+  height: 1px;
+  background: #a6a6a6;
+  margin: 8px 140px;
+  width: auto;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.day-column {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% / 7);
+  padding-bottom: 4px;
+}
+
+/* Time Slot Styles */
+.time-slot {
+  flex: 1;
+  min-height: 40px;
+  border: 1px solid #000000;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 1px;
+  border-radius: 12px;
+  /* Completely disable transitions and force stable rendering to eliminate flicker */
+  transition: none !important;
+  animation: none !important;
+  transform: translateZ(0); /* Force GPU acceleration for smoother rendering */
+  backface-visibility: hidden; /* Prevent flicker during repaints */
+  -webkit-font-smoothing: antialiased;
+  will-change: auto; /* Don't optimize for changes since we don't want any */
+  /* Prevent browser from triggering hover-related repaints */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hover effect completely disabled - use exact same styles to prevent any repaint */
+.time-slot:hover {
+  /* Explicitly set all properties to match non-hover state to prevent repaints */
+  background-color: inherit !important;
+  transform: translateZ(0) !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  border-color: inherit !important;
+  color: inherit !important;
+  cursor: pointer !important; /* Keep cursor consistent to prevent flicker from cursor change */
+  /* Prevent any browser-level hover effects */
+  -webkit-user-select: none;
+  user-select: none;
+  /* Force no layout shifts */
+  position: relative;
+  z-index: inherit;
+}
+
+.my-selected-slot {
+  background-color: #7c3aed !important;
+  color: white !important;
+}
+
+.dark .my-selected-slot {
+  background-color: #a78bfa !important;
+}
+
+.day-column:not(:last-child) {
+  margin-right: 2px;
+}
+
+.sub-device-row {
+  margin-left: 0px;
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.tentative-slot {
+  background-color: #aed6f1 !important;
+}
+
+.expired-slot {
+  color: #999;
+  /* Gray text for past slots */
+}
+
+.expired-slot:hover {
+  /* Hover effect disabled to prevent flickering */
+  /* background-color: inherit; */
+  cursor: not-allowed !important;
+}
+
+.maintenance-slot {
+  background-color: #888 !important;
+  color: white !important;
+  cursor: not-allowed !important;
+}
+
+/* ================== Summary Panel (Right Panel) & Message & Submit ================== */
+.summary-container {
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+
+
+/* Reservation submit container occupies the bottom 50% of the right panel */
+.reservation-submit-container {
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(52, 152, 219, 0.1);
+  border: 1px solid rgba(241, 242, 246, 0.8);
+  margin-top: 10px;
+}
+
+/* Textarea for leaving a message (optional) */
+.reservation-message {
+  flex: 1;
+  width: 90%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  line-height: 1.5;
+  border: 2px solid #d5dbe0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  resize: vertical;
+  font-family: 'Segoe UI', system-ui;
+}
+
+.reservation-message:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+  background: white;
+}
+
+.reservation-message::placeholder {
+  color: #95a5a6;
+  font-style: italic;
+}
+
+
+
+/* Submit button for the reservation */
+.submit-reservation-button {
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #3498db, #2ecc71);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-reservation-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg,
+      rgba(255, 255, 255, 0) 30%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0) 70%);
+  transition: all 0.5s;
+}
+
+.submit-reservation-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(52, 152, 219, 0.3);
+}
+
+.submit-reservation-button:hover::before {
+  left: 100%;
+}
+
+.submit-reservation-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+
+
+/* ================== Overall Summary Panel Styles ================== */
+.summary-panel {
+  display: flex;
+  flex-direction: column;
+  max-height: 60vh;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.summary-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  margin-right: 4px;
+}
+
+.summary-panel-header {
+  flex-shrink: 0;
+  margin-bottom: 16px;
+}
+
+.summary-header {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 3px solid #3498db;
+  position: relative;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+
+/* ================== Empty Summary status  ================== */
+.summary-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #95a5a6;
+  font-size: 1.2rem;
+}
+
+
+/* ================== Summary Device Type  ================== */
+.summary-device-type {
+  margin-bottom: 10px;
+}
+
+.device-type-header {
+  font-size: 1.3rem;
+  color: #34495e;
+  margin: 0 0 12px 0;
+  padding: 6px 14px;
+  background: linear-gradient(145deg, #f8f9fa 0%, #ecf0f1 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.device-type-header::before {
+  content: '➤';
+  color: #3498db;
+  font-size: 1.2em;
+}
+
+.summary-subdevice {
+  background: #ffffffe6;
+  border-radius: 12px;
+  padding: 5px;
+  margin-bottom: 10px;
+  transition: transform 0.2s ease;
+}
+
+.summary-subdevice:hover {
+  transform: translateY(-2px);
+}
+
+.subdevice-header {
+  font-size: 1.1rem;
+  color: #2ecc71;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subdevice-header::before {
+  content: '⏣';
+  font-size: 1.2em;
+  color: #27ae60;
+}
+
+/* Time interval style */
+.interval {
+  background: rgba(241, 242, 246, 0.5);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.interval::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: #3498db;
+}
+
+.interval-row {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.interval-label {
+  color: #7f8c8d;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.interval-value {
+  color: #2c3e50;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+}
+
+.interval-separator {
+  margin-right: 4px;
+}
+
+.summary-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg,
+      #3498db00 0%,
+      #3498db 50%,
+      #3498db00 100%);
+  margin: 12px 0;
+}
+
+
+/*  Conflicting timne intervals in Summary  */
+.conflict-font {
+  color: #e74c3c !important;
+  font-weight: bold;
+  position: relative;
+  padding-left: 24px;
+  font-family: 'Courier New', monospace;
+}
+
+.conflict-font::before {
+  content: '❗️';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+
+
+
+/*  Styles for different status  */
+.my-pending-slot {
+  background-color: #f59e0b !important;
+  color: white !important;
+}
+
+.dark .my-pending-slot {
+  background-color: #fbbf24 !important;
+}
+
+.conflicting-slot {
+  background-color: #ef4444 !important;
+  color: white !important;
+}
+
+.dark .conflicting-slot {
+  background-color: #f87171 !important;
+}
+
+.time-slot.conflicting-slot {
+  background-color: #ef4444 !important;
+  color: white !important;
+}
+
+.dark .time-slot.conflicting-slot {
+  background-color: #f87171 !important;
+}
+
+.my-confirmed-slot {
+  background-color: #10b981 !important;
+  color: white !important;
+}
+
+.dark .my-confirmed-slot {
+  background-color: #34d399 !important;
+}
+
+.my-expired-slot {
+  background-color: gray !important;
+  color: white !important;
+}
+
+.my-cancelled-slot {
+  background-color: #ddd !important;
+  color: black !important;
+}
+
+.others-slot {
+  background-color: #9333ea !important;
+  color: white !important;
+}
+
+.dark .others-slot {
+  background-color: #c084fc !important;
+}
+
+/* Hover effect disabled to prevent flickering */
+.time-slot.others-slot:hover {
+  /* background-color: red !important; */
+  /* color: white !important; */
+}
+
+
+
+
+
+
+
+/* --------------- Device Management Page ---------------*/
+
+.admin-center-panel {
+  flex: 1;
+  margin-left: 20px;
+  overflow: hidden;
+}
+
+.device-management-container {
+  padding-right: 20px;
+}
+
+.device-management-header {
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  height: 40px;
+}
+
+.icon-button:hover {
+  background: #cccccc;
+}
+
+.button-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.search-box {
+  position: relative;
+  margin-left: auto;
+  min-width: 250px;
+  flex: 1;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+
+.search-box input {
+  height: 40px;
+  width: 50%;
+  padding: 0px 12px 0px 36px;
+  line-height: 40px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 14px;
+  position: relative;
+}
+
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 0;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #3b82f6;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* -------------------- Add device panel -------------------- */
+.add-device-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.add-device {
+  background: white;
+  width: 450px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 25px;
+  position: relative;
+}
+
+.add-device-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.add-device-header h3 {
+  font-size: 20px;
+  color: #333;
+  margin: 0;
+}
+
+.close-button {
+  background: url('./image/close.png') no-repeat center;
+  background-size: contain;
+  width: 30px;
+  height: 30px;
+  border: none !important;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.close-button:hover {
+  opacity: 1;
+  transform: rotate(90deg);
+}
+
+.add-device-body {
+  margin: 10px 0;
+}
+
+.form-group.horizontal {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.form-group.horizontal label {
+  flex: 0 0 110px;
+  text-align: right;
+  font-weight: bold;
+  color: #666;
+  font-size: 16px;
+  margin-right: 15px;
+
+}
+
+.form-group.horizontal input[type="text"],
+.form-group.horizontal input[type="number"] {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.form-group.horizontal input[type="text"]:focus,
+.form-group.horizontal input[type="number"]:focus {
+  border-color: #2196F3;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.15);
+}
+
+.form-group.horizontal input[type="number"]::-webkit-outer-spin-button,
+.form-group.horizontal input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.form-group.horizontal input[type="number"] {
+  -moz-appearance: textfield;
+  /* Firefox */
+}
+
+.status-radio {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.status-radio label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #444;
+  cursor: pointer;
+}
+
+.status-radio input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #2196F3;
+  cursor: pointer;
+}
+
+.add-device-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.cancel-btn,
+.submit-btn {
+  padding: 10px 28px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  border: 2px solid transparent;
+}
+
+.cancel-btn {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.cancel-btn:hover {
+  background: #eee;
+  color: #444;
+  border-color: #ddd;
+}
+
+.submit-btn {
+  background: #2196F3;
+  color: white;
+}
+
+.submit-btn:hover {
+  background: #1976D2;
+  transform: translateY(-1px);
+}
+
+
+/* ---------------- Device Management Table Styles ---------------- */
+.device-management-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.device-management-table th,
+.device-management-table td {
+  padding: 1rem;
+  text-align: center;
+  vertical-align: middle;
+
+}
+
+.device-management-table th {
+  background: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  font-size: large;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.device-management-table td {
+  font-size: medium;
+  font-weight: bold;
+  color: #718096;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.device-management-table tr:last-child td {
+  border-bottom: none;
+}
+
+.device-management-table tr:hover {
+  background-color: #e0efff;
+}
+
+
+/* ---------------- Operation Button ---------------- */
+.operation-cell {
+  width: 200px;
+}
+
+.operation-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.edit-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #4dabf7;
+  color: white;
+  font-weight: bold;
+}
+
+
+.edit-btn:hover {
+  background: #339af0;
+}
+
+.custom-select-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.custom-select {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  appearance: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.custom-select:hover {
+  border-color: #4dabf7;
+  box-shadow: 0 2px 8px rgba(77, 171, 247, 0.2);
+}
+
+.custom-select:focus {
+  outline: none;
+  border-color: #2196F3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.15);
+}
+
+
+/* ================== Select maintenance start and end time================== */
+.maintenance-time-group {
+  margin: 1rem 0;
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+}
+
+
+.time-input-group {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+}
+
+
+.time-segment-select {
+  flex: 1;
+  padding: 8px 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  font-size: 14px;
+  width: 80px;
+}
+
+
+.date-picker {
+  flex: 1;
+  padding: 8px 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 80px;
+}
+
+
+.time-segment-select:hover,
+.date-picker:hover {
+  border-color: #4dabf7;
+}
+
+.time-segment-select:focus,
+.date-picker:focus {
+  outline: none;
+  border-color: #2196F3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.15);
+}
+
+/* ---------- Mode switch --------- */
+.mode-toggle-group {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.mode-toggle {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
+  cursor: pointer;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.mode-toggle:hover {
+  background: #d8d8d8;
+}
+
+.mode-toggle.active {
+  background: #2196F3;
+  color: white;
+  border-color: #2196F3;
+}
+
+.daily-maintenance {
+  display: grid;
+  gap: 15px;
+  margin-top: 10px;
+}

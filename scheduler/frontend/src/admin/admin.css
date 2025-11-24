@@ -1,0 +1,689 @@
+/* Admin.css */
+
+
+/* ----------------- reservation-management Page ----------------- */
+.reservation-management-container {
+    height: calc(100vh - 180px);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px;
+}
+
+.admin-schedule-section {
+    flex: 1 1 50%;
+    min-height: 50%;
+    overflow: hidden;
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.pending-approvals-section {
+    flex: 1 1 50%;
+    min-height: 50%;
+    overflow: hidden;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+
+.admin-schedule-section>div,
+.pending-approvals-section>div {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
+/* ----------------- Admin Schedule Table Panel ----------------- */
+.admin-schedule-container {
+    height: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+
+/* Admin Schedule table header */
+.admin-schedule-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    gap: 16px;
+}
+
+.admin-week-nav-btn {
+    background: #007bff;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.0rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-week-nav-btn:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 123, 255, 0.3);
+}
+
+.admin-month-year {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+
+.admin-days-row {
+    display: grid !important;
+    margin-bottom: 15px !important;
+    grid-template-columns: 240px repeat(7, 1fr);
+    column-gap: 2px;
+}
+
+.admin-day-column-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    padding: 8px;
+    text-align: center;
+}
+
+.admin-weekday {
+    color: #6c757d;
+    font-size: 0.75rem;
+    margin-bottom: 4px;
+}
+
+.admin-daynum {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+/* Legend Part */
+.admin-legend-container {
+    display: flex !important;
+    justify-content: flex-end;
+    gap: 24px !important;
+    padding: 8px 16px !important;
+}
+
+.admin-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 2px 4px;
+    border-radius: 12px;
+}
+
+.admin-legend-color {
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+}
+
+/* Device Type */
+.admin-device-type-row {
+    background: white;
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin: 2px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+}
+
+.admin-device-type-row:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.admin-device-name {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    font-weight: 600;
+    white-space: nowrap;
+    padding-right: 15px;
+    position: relative;
+}
+
+.admin-expand-icon {
+    margin-left: 12px;
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+
+.admin-sub-device-grid {
+    display: grid;
+    grid-template-columns: 240px repeat(7, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+    align-items: start;
+}
+
+.admin-subdevice-name {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: #27ae60;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 210px;
+    padding: 12px 15px;
+    text-align: left !important;
+    display: inline-block;
+    border-left: 4px solid #3498db;
+}
+
+.admin-main-name {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.admin-polatis-name {
+    margin-top: 4px;
+    font-size: 0.85rem;
+    color: #888888;
+    font-style: italic;
+}
+
+
+.admin-time-slot {
+    background: white;
+    border-radius: 8px;
+    padding: 12px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-time-slot:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+
+.admin-time-slot::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+}
+
+.admin-pending-slot::before {
+    background: #ffb74d;
+}
+
+.admin-confirmed-slot::before {
+    background: #66bb6a;
+}
+
+.admin-conflicting-slot::before {
+    background: #ef5350;
+}
+
+
+.admin-devices-scroll {
+    max-height: 60vh;
+    overflow-x: auto;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.admin-devices-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.admin-devices-scroll::-webkit-scrollbar-track {
+    background: #f1f3f5;
+    border-radius: 4px;
+}
+
+.admin-devices-scroll::-webkit-scrollbar-thumb {
+    background: #cfd8dc;
+    border-radius: 4px;
+}
+
+.devices-scroll-container {
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+
+.schedule-table-header,
+.days-row,
+.legend-container {
+    flex-shrink: 0;
+}
+
+
+
+
+.device-type-row {
+    cursor: pointer;
+    background-color: #f8f9fa;
+    padding: 8px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.device-type-row:hover {
+    background-color: #e9ecef;
+}
+
+.expand-button {
+    margin-left: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+
+.time-slot {
+    padding: 4px;
+    border: 1px solid #dee2e6;
+    min-height: 40px;
+    font-size: 0.9em;
+}
+
+.time-slot.expired-slot {
+    color: #6c757d;
+    cursor: default;
+    pointer-events: none;
+}
+
+.time-slot.my-pending-slot {
+    background-color: #ffe082;
+}
+
+.time-slot.my-confirmed-slot {
+    background-color: #c8e6c9;
+}
+
+.time-slot.conflicting-slot {
+    background-color: #ffab91;
+}
+
+
+/*-------------- Pending Approval List Panel --------------*/
+.pending-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
+
+.approval-table-container {
+    flex: 1;
+    overflow: auto;
+}
+
+.pending-approvals-list {
+    margin-top: 20px;
+}
+
+.booking-table {
+    border-radius: 1rem;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.booking-table th,
+.booking-table td {
+    padding: 8px;
+    border: 1px solid #dee2e6;
+    text-align: left;
+}
+
+.clickable-row:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.records-btn {
+    font-size: 0.9rem;
+    background: #4dabf7;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-weight: bold;
+}
+
+.records-btn:hover {
+    background: #339af0;
+    color: rgb(61, 61, 61);
+}
+
+.search-box {
+    position: relative;
+    margin-left: 50px;
+    height: auto;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+}
+
+.header-section input {
+    font-size: 1rem;
+    height: 25px;
+    padding: 8px 12px 8px 36px;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    width: 280px;
+    transition: all 0.3s ease;
+}
+
+.header-section input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.approval-table-container {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+.approval-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1200px;
+}
+
+
+.approval-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #f8f9fa;
+}
+
+.approval-table th {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    font-size: 1.13rem;
+    border-bottom: 2px solid #e2e8f0;
+    color: #4a5568;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+
+}
+
+.approval-table td {
+    font-size: 1.0rem;
+    font-weight: bold;
+    padding: 12px 15px;
+    border-bottom: 1px solid #edf2f7;
+    color: #718096;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.approval-table tr:hover {
+    background-color: #e0efff;
+}
+
+.row-exit {
+    animation: slideOut 0.8s forwards;
+}
+
+@keyframes slideOut {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(-100px);
+        opacity: 0;
+    }
+}
+
+
+
+
+.status-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85em;
+    font-weight: 500;
+}
+
+.status-tag.pending {
+    background: #fde79c;
+    color: #856404;
+}
+
+.status-tag.conflicting {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-tag.expired {
+    background: #cccccc;
+    color: #6b6b6b;
+}
+
+.status-tag.rejected {
+    background: #ffe5e8;
+    color: #d32f2f;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.confirm-btn {
+    background: #28a745;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-weight: bold;
+}
+
+.confirm-btn:hover {
+    opacity: 0.9;
+}
+
+.resolve-btn {
+    background: #007bff !important;
+}
+
+.decline-btn {
+    background: #dc3545;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-weight: bold;
+}
+
+.decline-btn:hover {
+    opacity: 0.9;
+}
+
+.error-message {
+    color: #dc3545;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    background: #f8d7da;
+}
+
+/* ----------------- Booking Records Panel ----------------- */
+.records-dialog {
+    width: 80vw;
+    height: 70vh;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.records-search input {
+    flex: 1;
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    width: 300px;
+}
+
+
+.records-table-container {
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 10px;
+    max-height: 60vh;
+    position: relative;
+}
+
+.records-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.records-table thead {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.records-table th {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    border-bottom: 2px solid #e2e8f0;
+    color: #4a5568;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.records-table td {
+    font-weight: bold;
+    padding: 12px 15px;
+    border-bottom: 1px solid #edf2f7;
+    color: #718096;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.records-table tr:hover {
+    background-color: #e0efff;
+}
+
+
+
+.records-table-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.records-table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.records-table-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.records-table-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* ============== Manage Device Page turing Part ==============*/
+.pagination-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.pagination-btn {
+    font-size: 1.1rem;
+    padding: 6px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: white;
+    color: #4a5568;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 36px;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination-btn.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

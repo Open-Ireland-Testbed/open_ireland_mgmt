@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using create-react-app" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+  <title>Open-Ireland-Testbed Lab Scheduler</title>
+  <!-- Suppress ResizeObserver errors BEFORE React loads - MUST be in head -->
+  <script>
+    (function() {
+      // Suppress ResizeObserver errors at the earliest possible moment
+      const originalError = window.onerror;
+      window.onerror = function(message, source, lineno, colno, error) {
+        if (message && typeof message === 'string' && message.includes('ResizeObserver')) {
+          return true; // Suppress the error
+        }
+        if (originalError) {
+          return originalError.call(this, message, source, lineno, colno, error);
+        }
+        return false;
+      };
+
+      // Suppress ResizeObserver errors via addEventListener (highest priority)
+      window.addEventListener('error', function(e) {
+        if (e.message && typeof e.message === 'string' && e.message.includes('ResizeObserver')) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          return false;
+        }
+      }, true); // Use capture phase
+
+      // Suppress unhandled promise rejections
+      window.addEventListener('unhandledrejection', function(e) {
+        const reason = e.reason ? (e.reason.toString ? e.reason.toString() : String(e.reason)) : '';
+        if (reason.includes('ResizeObserver')) {
+          e.preventDefault();
+        }
+      });
+
+      // Override console.error to filter ResizeObserver warnings
+      const originalConsoleError = console.error;
+      console.error = function() {
+        const errorMsg = Array.prototype.join.call(arguments, ' ');
+        if (errorMsg.includes('ResizeObserver') && 
+            (errorMsg.includes('loop') || errorMsg.includes('completed with undelivered notifications'))) {
+          return; // Silently ignore
+        }
+        originalConsoleError.apply(console, arguments);
+      };
+
+      // Intercept React Error Overlay's error handler BEFORE it's set
+      // Use Object.defineProperty to catch when the overlay tries to set its handler
+      let overlayHandler = null;
+      Object.defineProperty(window, '__REACT_ERROR_OVERLAY_GLOBAL_HANDLER__', {
+        get: function() {
+          return function(error, isFatal) {
+            const errorMessage = error?.message || error?.toString() || String(error || '');
+            if (errorMessage.includes('ResizeObserver')) {
+              return; // Suppress ResizeObserver errors completely
+            }
+            if (overlayHandler) {
+              return overlayHandler.call(this, error, isFatal);
+            }
+          };
+        },
+        set: function(value) {
+          // Wrap any error handler that gets set by React's error overlay
+          overlayHandler = value;
+        },
+        configurable: true,
+        enumerable: true
+      });
+    })();
+  </script>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+</body>
+
+</html>

@@ -1,0 +1,426 @@
+/* ========== Overlay ========== */
+.book-multi-device-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* ========== Popup window container ========== */
+.book-multi-device {
+    position: relative;
+    background: #fff;
+    width: 800px;
+    min-height: 490px;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ========== Header ========== */
+.book-multi-device-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+}
+
+.book-multi-device-header h3 {
+    font-size: 20px;
+    color: #333;
+    margin: 0;
+}
+
+/* ========== Body  ========== */
+.book-multi-device-body {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+/* ========== Right panel ========== */
+.book-multi-device-left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #eee;
+    padding-right: 10px;
+}
+
+.book-search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.book-search-container input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+.book-search-container button {
+    height: 30px;
+    padding: 8px 20px;
+    white-space: nowrap;
+    margin-top: 3px;
+    font-size: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.book-search-container button:hover {
+    background: linear-gradient(135deg, #1976D2 0%, #0d47a1 100%);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    transform: translateY(-1px);
+}
+
+/*  Search tips */
+.search-help {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 12px 0;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.search-help p {
+    margin: 0 0 8px 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+}
+
+.search-help ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.search-help li {
+    margin-bottom: 6px;
+    padding-left: 24px;
+    position: relative;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.search-help li:before {
+    content: '•';
+    position: absolute;
+    left: 10px;
+    color: #6c757d;
+}
+
+/* Selected Device List */
+.selected-devices-section {
+    margin: 12px 0;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #eee;
+}
+
+.selected-devices-section h4 {
+    margin: 0 0 10px 4px;
+    color: #444;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.selected-devices-list {
+    max-height: 140px;
+    overflow-y: auto;
+    padding: 4px;
+    border-radius: 8px;
+    background: white;
+}
+
+.selected-devices-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.selected-devices-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.selected-devices-list::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 12px;
+}
+
+.selected-device-name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 4px 0;
+    background: #cbcbcb;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    transition: all 0.2s ease;
+}
+
+.selected-device-name:hover {
+    background: #bebebe;
+    transform: translateX(2px);
+}
+
+.remove-device-button {
+    background: none;
+    border: none;
+    color: #ef5350;
+    cursor: pointer;
+    padding: 0 6px;
+    font-size: 18px;
+    line-height: 1;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.remove-device-button:hover {
+    color: #c62828;
+}
+
+.book-search-container+.selected-devices-section {
+    margin-top: -4px;
+    margin-bottom: 8px;
+}
+
+
+
+/* Device list */
+.device-list {
+    margin-top: 5px;
+    max-height: 480px;
+    overflow-y: auto;
+}
+
+.device-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.device-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.device-list::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 12px;
+}
+
+
+.device-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+}
+
+.device-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.polatis-name {
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.device-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* .delete-btn {
+    background-color: #ef5350;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f;
+} */
+
+/* ========== Right panel => Date Picker + Conflicting time slot ========== */
+.book-multi-device-right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+}
+
+.book-multi-device-date-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.book-date-picker-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.book-date-picker-row label {
+    min-width: 80px;
+    font-weight: 500;
+    color: #666;
+}
+
+.book-date-picker-row input[type="date"] {
+    flex: 1;
+    padding: 8px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+/*  Conflicts list */
+.conflict-list {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    flex: 1;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.conflict-title {
+    color: #c62828;
+    margin: 0 0 15px 0;
+    font-size: 16px;
+}
+
+.no-conflicts {
+    color: #2e7d32;
+    padding: 10px;
+    background: #c8e6c9;
+    border-radius: 8px;
+}
+
+/* Single conflicting device */
+.conflict-item {
+    margin-bottom: 20px;
+    background: #ffc3c3;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.device-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+
+/* Time peroid */
+.time-slot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+    padding: 6px;
+    background: white;
+    border-radius: 6px;
+}
+
+.time-slot.booking {
+    background: #fff3e0;
+    border-left: 4px solid #ffa726;
+}
+
+.time-slot.maintenance {
+    background: #ffebee;
+    border-left: 4px solid #ef5350;
+}
+
+.time-slot.all-day {
+    background: #f8f8f8;
+}
+
+.conflict-tag {
+    margin-left: auto;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+.time-slot.booking .conflict-tag {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.time-slot.maintenance .conflict-tag {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.slot-date-time {
+    font-weight: 500;
+    color: #444;
+}
+
+.slot-conflict-type {
+    color: #666;
+    font-size: 0.85em;
+}
+
+.mul-booking-button {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end
+}
+
+
+.mul-booking-save {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bolder;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(33, 150, 243, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.mul-booking-save:hover {
+    background: linear-gradient(135deg, #1976D2 0%, #0d47a1 100%);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    transform: translateY(-1px);
+}

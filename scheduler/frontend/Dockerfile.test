@@ -1,0 +1,19 @@
+# Dockerfile for frontend tests
+FROM node:18-alpine
+
+WORKDIR /app/frontend
+
+# Install frontend dependencies
+COPY package.json package-lock.json* ./
+RUN npm install --legacy-peer-deps || npm install --legacy-peer-deps --force
+
+# Copy frontend code
+COPY . .
+
+# Set CI environment
+ENV CI=true
+ENV REACT_APP_API_URL=http://localhost:20001
+
+# Default command runs frontend tests
+CMD ["npm", "run", "test:ci"]
+

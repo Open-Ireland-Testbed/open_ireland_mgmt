@@ -1,0 +1,32 @@
+version: '2.1'
+
+services:
+  backend-test:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.test
+    volumes:
+      - ./backend:/app/backend
+    environment:
+      DATABASE_URL: "sqlite:///:memory:"
+      PYTHONUNBUFFERED: "1"
+    command: pytest tests/ -v --tb=short
+    stdin_open: false
+    tty: false
+
+  frontend-test:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.test
+    volumes:
+      - ./frontend:/app/frontend
+      - frontend-test-node_modules:/app/frontend/node_modules
+    environment:
+      CI: "true"
+      REACT_APP_API_URL: "http://localhost:20001"
+    command: npm run test:ci
+    stdin_open: false
+    tty: false
+
+volumes:
+  frontend-test-node_modules:

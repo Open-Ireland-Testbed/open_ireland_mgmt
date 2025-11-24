@@ -1,0 +1,36 @@
+version: "2.1"
+
+services:
+  # ——————————————— Frontend ———————————————
+  frontend:
+    container_name: scheduler_front_test
+    build: ./frontend
+    network_mode: host
+    environment:
+      # Port configuration - change these values to change ports system-wide
+      - FRONTEND_PORT=20000
+      - BACKEND_PORT=20001
+      # Construct API URL from backend port (update BACKEND_PORT above to change)
+      - REACT_APP_API_URL=http://100.111.63.95:20001
+      - PORT=20000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+  # ——————————————— Backend ———————————————
+  backend:
+    container_name: scheduler_api_test
+    build: ./backend
+    network_mode: host
+    env_file:
+      - .env
+    environment:
+      - DEBUG=True
+      # Port configuration - change these values to change ports system-wide
+      - BACKEND_PORT=20001
+      # Update FRONTEND_PORT in frontend service and this value to change frontend URL
+      - FRONTEND_URL=http://100.111.63.95:20000
+    volumes:
+      - ./backend:/app
+    restart: unless-stopped
