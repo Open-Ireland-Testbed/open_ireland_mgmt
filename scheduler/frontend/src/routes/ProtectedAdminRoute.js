@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
+import AccessDeniedPage from '../admin/pages/AccessDeniedPage';
 
 /**
  * ProtectedAdminRoute - Route guard for admin pages
@@ -8,10 +9,9 @@ import useAuthStore from '../store/authStore';
  * Prevents non-admin users from accessing admin routes by:
  * - Checking authentication status
  * - Checking admin status
- * - Redirecting to /client if not authorized
+ * - Showing access denied page if not authorized (instead of redirecting)
  * 
- * Note: Toast messages are handled by the AdminApp component after redirect,
- * since ToastProvider may not be available at this route level.
+ * Note: Non-authenticated users are still redirected to /client
  */
 export default function ProtectedAdminRoute({ children }) {
   const { authenticated, isAdmin, loading } = useAuthStore();
@@ -33,9 +33,9 @@ export default function ProtectedAdminRoute({ children }) {
     return <Navigate to="/client" replace state={{ adminRedirect: 'You must be signed in to access the admin panel.' }} />;
   }
 
-  // Authenticated but not admin - redirect to client page
+  // Authenticated but not admin - show access denied page
   if (!isAdmin) {
-    return <Navigate to="/client" replace state={{ adminRedirect: 'You need admin permissions to access this page.' }} />;
+    return <AccessDeniedPage />;
   }
 
   // Authenticated and admin - render the admin component

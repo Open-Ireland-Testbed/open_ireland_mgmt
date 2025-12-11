@@ -260,3 +260,20 @@ code {
   border-color: hsl(var(--accent-hue), var(--accent-saturation), var(--accent-lightness));
   background-color: rgba(30, 27, 75, 0.5);
 }
+
+/* Priority Season accent colors - overrides default accent for admin views */
+.priority-season {
+  --accent-hue: 38; /* Amber/Orange */
+  --accent-saturation: 92%;
+  --accent-lightness: 50%;
+}
+
+.priority-season .glass-button {
+  background-color: rgba(251, 191, 36, 0.35);
+  border-color: rgba(251, 191, 36, 0.5);
+}
+
+.dark.priority-season .glass-button {
+  background-color: rgba(217, 119, 6, 0.3);
+  border-color: rgba(251, 191, 36, 0.4);
+}

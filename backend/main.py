@@ -262,6 +262,12 @@ def _delete_device_booking_rows(db: Session, booking_ids: Iterable[int]) -> None
 
 
 # ================== Check Session ==================
+@app.get("/health")
+def health_check():
+    """Simple health check endpoint to verify backend is running"""
+    return {"status": "ok", "service": "scheduler-backend"}
+
+
 @app.get("/session")
 def get_session(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")

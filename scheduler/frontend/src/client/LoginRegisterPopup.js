@@ -25,21 +25,56 @@ export default function LoginRegisterPopup({
     };
 
     // ===================== Handle User Login =====================
-    const handleLogin = async (username, password) => {
+    const handleLogin = async (username, password, retryCount = 0) => {
         if (!username || !password) {
             alert('Please enter username and password');
             return;
         }
         try {
             const hashedPassword = CryptoJS.SHA256(password).toString();
-            const res = await fetch(`${API_BASE_URL}/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password: hashedPassword }),
-                credentials: 'include'
-            });
+            
+            // Create abort controller for timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+            
+            let res;
+            try {
+                res = await fetch(`${API_BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password: hashedPassword }),
+                    credentials: 'include',
+                    signal: controller.signal,
+                });
+                clearTimeout(timeoutId);
+            } catch (fetchError) {
+                clearTimeout(timeoutId);
+                
+                // Handle network errors with retry
+                if (
+                    (fetchError.name === 'AbortError' || fetchError.name === 'TimeoutError') &&
+                    retryCount < 2
+                ) {
+                    // Retry on timeout with exponential backoff
+                    await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+                    return handleLogin(username, password, retryCount + 1);
+                }
+                
+                // Network error or timeout
+                if (fetchError.name === 'AbortError' || fetchError.name === 'TimeoutError') {
+                    throw new Error('Connection timeout. Please check your network connection and try again.');
+                }
+                
+                // Other network errors (CORS, DNS, etc.)
+                if (fetchError.message?.includes('fetch') || fetchError.message?.includes('network')) {
+                    throw new Error('Unable to connect to server. Please check that the backend is running and try again.');
+                }
+                
+                throw fetchError;
+            }
+            
             if (!res.ok) {
-                const errData = await res.json();
+                const errData = await res.json().catch(() => ({}));
                 throw new Error(errData.detail || 'Login failed');
             }
             const data = await res.json();
@@ -47,7 +82,19 @@ export default function LoginRegisterPopup({
             onClose();
             alert(data.message);
         } catch (err) {
-            alert(err.message);
+            // Provide more helpful error messages
+            let errorMessage = err.message || 'Unable to sign in.';
+            
+            // Check if it's a network-related error
+            if (
+                errorMessage.includes('fetch') ||
+                errorMessage.includes('network') ||
+                errorMessage.includes('Failed to fetch')
+            ) {
+                errorMessage = 'Unable to connect to server. Please check that the backend is running and try again.';
+            }
+            
+            alert(errorMessage);
         }
     };
 

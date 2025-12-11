@@ -262,7 +262,7 @@ function ClientV2Inner() {
   const openRegisterModal = useCallback(() => setAuthModal('register'), []);
 
   const handleLoginSubmit = useCallback(
-    async ({ username, password }) => {
+    async ({ username, password }, retryCount = 0) => {
       if (!username || !password) {
         toast.error('Please enter both username and password.');
         return;
@@ -272,14 +272,48 @@ function ClientV2Inner() {
       try {
         // Send SHA256 hashed password (never send plain text)
         const hashedPassword = CryptoJS.SHA256(password).toString();
-        const res = await fetch(`${API_BASE_URL}/login`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, password: hashedPassword }),
-        });
+        
+        // Create abort controller for timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+        
+        let res;
+        try {
+          res = await fetch(`${API_BASE_URL}/login`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password: hashedPassword }),
+            signal: controller.signal,
+          });
+          clearTimeout(timeoutId);
+        } catch (fetchError) {
+          clearTimeout(timeoutId);
+          
+          // Handle network errors with retry
+          if (
+            (fetchError.name === 'AbortError' || fetchError.name === 'TimeoutError') &&
+            retryCount < 2
+          ) {
+            // Retry on timeout with exponential backoff
+            await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+            return handleLoginSubmit({ username, password }, retryCount + 1);
+          }
+          
+          // Network error or timeout
+          if (fetchError.name === 'AbortError' || fetchError.name === 'TimeoutError') {
+            throw new Error('Connection timeout. Please check your network connection and try again.');
+          }
+          
+          // Other network errors (CORS, DNS, etc.)
+          if (fetchError.message?.includes('fetch') || fetchError.message?.includes('network')) {
+            throw new Error('Unable to connect to server. Please check that the backend is running and try again.');
+          }
+          
+          throw fetchError;
+        }
 
         if (!res.ok) {
           const errData = await res.json().catch(() => ({}));
@@ -304,7 +338,19 @@ function ClientV2Inner() {
           }, 100);
         }, 200);
       } catch (err) {
-        toast.error(err.message || 'Unable to sign in.');
+        // Provide more helpful error messages
+        let errorMessage = err.message || 'Unable to sign in.';
+        
+        // Check if it's a network-related error
+        if (
+          errorMessage.includes('fetch') ||
+          errorMessage.includes('network') ||
+          errorMessage.includes('Failed to fetch')
+        ) {
+          errorMessage = 'Unable to connect to server. Please check that the backend is running and try again.';
+        }
+        
+        toast.error(errorMessage);
       } finally {
         setAuthSubmitting(false);
       }
@@ -479,10 +525,12 @@ function ClientV2Inner() {
                         if (isAdmin) {
                           setIsNavigating(true);
                           navigate('/admin');
+                        } else {
+                          toast.error('Admin access required');
                         }
                       }}
                       disabled={!isAdmin || isNavigating}
-                      title={isAdmin ? 'Open Admin Panel' : 'Admin only'}
+                      title={isAdmin ? 'Open Admin Panel' : 'Admin access required'}
                       className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                         isAdmin
                           ? 'text-white hover:opacity-90 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'

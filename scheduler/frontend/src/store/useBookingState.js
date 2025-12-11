@@ -333,8 +333,36 @@ const useBookingState = create((set, get) => {
     const uniqueDeviceIds = Array.from(new Set(deviceIds || []));
     const uniqueDates = dedupeAndSortDates(dates || []);
 
-    uniqueDeviceIds.forEach((deviceId) => {
-      get().addDeviceDates(deviceId, uniqueDates);
+    // Batch all device selections into a single state update for better performance
+    // and to ensure conflict detection runs after all updates are complete
+    set((state) => {
+      const selectedSlots = { ...state.selectedSlots };
+      const selectedDevices = [...state.selectedDevices];
+
+      uniqueDeviceIds.forEach((deviceId) => {
+        if (!uniqueDates || uniqueDates.length === 0) {
+          // If no dates, just add device to selectedDevices if not already there
+          if (!selectedDevices.includes(deviceId)) {
+            selectedDevices.push(deviceId);
+          }
+        } else {
+          // Merge dates for this device
+          const existingDates = state.selectedSlots[deviceId] || [];
+          const combinedDates = dedupeAndSortDates([...existingDates, ...uniqueDates]);
+          selectedSlots[deviceId] = combinedDates;
+
+          // Add device to selectedDevices if not already there
+          if (!selectedDevices.includes(deviceId)) {
+            selectedDevices.push(deviceId);
+          }
+        }
+      });
+
+      snapshotAndPersist(state, { selectedDevices, selectedSlots });
+      return {
+        selectedDevices,
+        selectedSlots,
+      };
     });
   },
 

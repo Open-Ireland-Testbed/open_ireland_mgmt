@@ -10,13 +10,20 @@ const useAuthStore = create((set, get) => ({
   loading: true, // Initial loading state
 
   // Actions
-  refreshAuth: async () => {
+  refreshAuth: async (retryCount = 0) => {
     set({ loading: true });
     try {
+      // Create abort controller for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
       const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
         method: 'GET',
         credentials: 'include',
+        signal: controller.signal,
       });
+      
+      clearTimeout(timeoutId);
 
       // Handle network errors or non-OK responses
       if (!res.ok) {
@@ -31,15 +38,15 @@ const useAuthStore = create((set, get) => ({
           });
           return;
         }
-        // Other errors (500, network issues, etc.) - log but don't throw
+        // Other errors (500, network issues, etc.) - retry if it's a server error
+        if (res.status >= 500 && retryCount < 2) {
+          // Retry server errors up to 2 times with exponential backoff
+          await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+          return get().refreshAuth(retryCount + 1);
+        }
+        // Don't clear auth on transient errors - keep current state
         console.warn('Auth check failed with status:', res.status);
-        set({
-          authenticated: false,
-          userId: null,
-          username: null,
-          isAdmin: false,
-          loading: false,
-        });
+        set({ loading: false });
         return;
       }
 
@@ -48,13 +55,8 @@ const useAuthStore = create((set, get) => ({
         data = await res.json();
       } catch (parseError) {
         console.error('Failed to parse auth response', parseError);
-        set({
-          authenticated: false,
-          userId: null,
-          username: null,
-          isAdmin: false,
-          loading: false,
-        });
+        // Don't clear auth on parse errors - might be transient
+        set({ loading: false });
         return;
       }
 
@@ -76,18 +78,28 @@ const useAuthStore = create((set, get) => ({
         });
       }
     } catch (err) {
-      // Network errors, CORS issues, etc.
-      // Only log if it's not a network error (which is common when backend is down)
-      if (err.name !== 'TypeError' || !err.message.includes('fetch')) {
-        console.error('Failed to refresh auth', err);
+      // Network errors, CORS issues, timeout, etc.
+      // Retry network errors up to 2 times
+      if (
+        (err.name === 'TypeError' && err.message.includes('fetch')) ||
+        err.name === 'AbortError' ||
+        err.name === 'TimeoutError'
+      ) {
+        if (retryCount < 2) {
+          // Retry with exponential backoff
+          await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+          return get().refreshAuth(retryCount + 1);
+        }
+        // After retries, don't clear auth - might be temporary network issue
+        // Only clear if we're sure it's a permanent issue
+        console.warn('Network error during auth check, keeping current auth state');
+        set({ loading: false });
+        return;
       }
-      set({
-        authenticated: false,
-        userId: null,
-        username: null,
-        isAdmin: false,
-        loading: false,
-      });
+      
+      // For other errors, log but don't clear auth state
+      console.error('Failed to refresh auth', err);
+      set({ loading: false });
     }
   },
 

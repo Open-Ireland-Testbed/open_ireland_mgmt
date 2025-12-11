@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, startTransition } from 'react';
 import Fuse from 'fuse.js';
 import { useDevices } from '../../services/deviceService';
 import useSchedulerStore from '../../store/schedulerStore';
@@ -66,11 +66,36 @@ function parsePatchText(text) {
   return matches;
 }
 
+// Helper function to get dates in range
+const getDatesInRange = (start, end) => {
+  if (!start || !end) {
+    return [];
+  }
+
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
+    return [];
+  }
+
+  const dates = [];
+  const current = new Date(startDate);
+  current.setHours(0, 0, 0, 0);
+  endDate.setHours(0, 0, 0, 0);
+
+  while (current <= endDate) {
+    dates.push(current.toISOString().split('T')[0]);
+    current.setDate(current.getDate() + 1);
+  }
+
+  return dates;
+};
+
 export default function PatchListPanel() {
   const { data: devices = [] } = useDevices();
-  const { filters, setDeviceIds } = useSchedulerStore();
+  const { filters, setDeviceIds, ui } = useSchedulerStore();
   const { success, error: showError, warning: showWarning } = useToastContext();
-  const selectDevice = useBookingState((state) => state.selectDevice);
+  const importDeviceSelections = useBookingState((state) => state.importDeviceSelections);
   const [patchText, setPatchText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -177,14 +202,30 @@ export default function PatchListPanel() {
 
       // Set device filter to show only matched devices
       if (matchedDeviceIds.size > 0) {
-        setDeviceIds(Array.from(matchedDeviceIds));
+        // Get the date range from UI state (preferred) or fallback to selectedRange
+        const dateRange = ui?.dateRange || {};
+        const { start, end } = dateRange;
+        const dates = getDatesInRange(start, end);
+
+        // Update device selections - importDeviceSelections now batches all updates
+        // into a single state update, ensuring conflict detection runs correctly
+        // This ensures conflicts are properly detected since we're using the UI date range
+        if (dates.length > 0) {
+          importDeviceSelections(Array.from(matchedDeviceIds), dates);
+        } else {
+          // If no date range is set, still import devices (they'll be selected without dates)
+          // This maintains backward compatibility
+          importDeviceSelections(Array.from(matchedDeviceIds), []);
+        }
+
+        // Update filter in a transition to reduce visual re-renders
+        // This is safe to defer since it doesn't affect conflict detection
+        startTransition(() => {
+          setDeviceIds(Array.from(matchedDeviceIds));
+        });
+
         success(`Selected ${matchedDeviceIds.size} device(s) from patch list`);
 
-        // Merge matched devices into booking selections using the current date range
-        matchedDeviceIds.forEach(deviceId => {
-          selectDevice(deviceId);
-        });
-        
         if (fuzzyCorrections.length > 0) {
           setTimeout(() => {
             const summary = fuzzyCorrections
