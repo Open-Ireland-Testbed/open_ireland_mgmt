@@ -48,7 +48,8 @@ from zoneinfo import ZoneInfo
 from typing import List, Optional, Iterable
 
 from backend.scheduler.routers.admin import router as admin_router
-from backend.scheduler.routers.admin_v2 import router as admin_v2_router
+# from backend.scheduler.routers.admin_v2 import router as admin_v2_router
+from backend.scheduler.routers.admin_debug import router as admin_debug_router
 from backend.scheduler.routers.control_panel import router as control_panel_router
 from backend.core.discord_utils import send_booking_created_notification
 
@@ -91,7 +92,8 @@ async def create_tables():
 
 
 app.include_router(admin_router)
-app.include_router(admin_v2_router)
+# app.include_router(admin_v2_router)
+app.include_router(admin_debug_router)
 app.include_router(control_panel_router)
 try:
     app.include_router(inventory_router, prefix="/api/inventory", tags=["inventory"])
@@ -1660,6 +1662,7 @@ def get_bookings_for_week(start: str, db: Session = Depends(get_db)):
                 models.User.username,
             )
             .outerjoin(models.Device, models.Booking.device_id == models.Device.id)
+            # .outerjoin(inventory_models.DeviceType, models.Device.device_type_id == inventory_models.DeviceType.id)
             .outerjoin(models.User, models.Booking.user_id == models.User.id)
             .filter(
                 models.Booking.start_time < week_end,

@@ -1,7 +1,9 @@
 import os
 from fastapi import APIRouter, Depends, HTTPException, status, Request, BackgroundTasks
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_
+# Phase U2: Import InventoryDevice as Device for unified device management
+from backend.inventory.models import InventoryDevice as Device, DeviceType
 from backend.scheduler import models, schemas
 from backend.core.deps import get_db
 
@@ -91,9 +93,10 @@ def get_session(request: Request, db: Session = Depends(get_db)):
 
 # ================== Show all devices ==================
 @router.get("/devices", response_model=list[schemas.DeviceResponse])
-def list_devices(db: Session = Depends(get_db), auth: None = Depends(admin_required)):
-    devices = db.query(models.Device).all()
-    return devices
+def get_devices(request: Request, db: Session = Depends(get_db)):
+    admin_required(request, db)
+    # Phase U2: Eager load device_type to prevent N+1 queries
+    return db.query(Device).options(joinedload(Device.device_type)).all()
 
 
 
@@ -101,29 +104,51 @@ def list_devices(db: Session = Depends(get_db), auth: None = Depends(admin_requi
 @router.post("/devices", response_model=schemas.DeviceResponse, status_code=status.HTTP_201_CREATED)
 def add_device(device: schemas.DeviceCreate, db: Session = Depends(get_db), auth: None = Depends(admin_required)):
 
-    existing_polatis = db.query(models.Device).filter(
-        models.Device.deviceType == device.deviceType,
-        models.Device.deviceName == device.deviceName,
-        models.Device.polatis_name == device.polatis_name
-    ).first()
+    # Phase U2: Rewrite deviceType filter with JOIN
+    existing_polatis = (
+        db.query(Device)
+        .join(DeviceType)
+        .filter(
+            DeviceType.name == device.deviceType,
+            Device.name == device.deviceName,
+            Device.polatis_name == device.polatis_name
+        )
+        .first()
+    )
 
     if existing_polatis:
         raise HTTPException(status_code=400, detail="Polatis name already exists in this device group")
 
-    existing_ip_conflict = db.query(models.Device).filter(
-        models.Device.ip_address == str(device.ip_address) if device.ip_address else None,
-        or_(
-            models.Device.deviceType != device.deviceType,
-            models.Device.deviceName != device.deviceName
+    # Phase U2: Rewrite IP conflict check with JOIN
+    if device.ip_address:
+        existing_ip_conflict = (
+            db.query(Device)
+            .join(DeviceType)
+            .filter(
+                Device.mgmt_ip == str(device.ip_address),
+                or_(
+                    DeviceType.name != device.deviceType,
+                    Device.name != device.deviceName
+                )
+            )
+            .first()
         )
-    ).first()
 
-    if existing_ip_conflict:
-        raise HTTPException(status_code=400, detail="IP address already exists for another device")
+        if existing_ip_conflict:
+            raise HTTPException(status_code=400, detail="IP address already exists for another device")
 
-    new_device = models.Device(
+    # Phase U2: Create InventoryDevice with device_type lookup
+    # deviceType setter was removed - must handle lookup in router
+    device_type_obj = db.query(DeviceType).filter(DeviceType.name == device.deviceType).first()
+    if not device_type_obj:
+        raise HTTPException(
+            status_code=400,
+            detail=f"DeviceType '{device.deviceType}' not found. Please create it via inventory API first."
+        )
+    
+    new_device = Device(
         polatis_name=device.polatis_name,
-        deviceType=device.deviceType,
+        device_type=device_type_obj,  # Set relationship directly
         deviceName=device.deviceName,
         status=device.status,
         ip_address=str(device.ip_address) if device.ip_address else None,
@@ -134,6 +159,7 @@ def add_device(device: schemas.DeviceCreate, db: Session = Depends(get_db), auth
     )
     db.add(new_device)
     db.commit()
+    # Eager load device_type for response
     db.refresh(new_device)
     return new_device
 
@@ -143,7 +169,7 @@ def add_device(device: schemas.DeviceCreate, db: Session = Depends(get_db), auth
 @router.delete("/devices/{device_id}")
 def delete_device(device_id: int, db: Session = Depends(get_db),  auth: None = Depends(admin_required)):
 
-    device = db.query(models.Device).get(device_id)
+    device = db.query(Device).get(device_id)
     if not device:
         raise HTTPException(status_code=404, detail="Device not found")
     db.delete(device)
@@ -156,56 +182,75 @@ def delete_device(device_id: int, db: Session = Depends(get_db),  auth: None = D
 def update_device_info(device_id: int, update: schemas.DeviceUpdateFull, 
                        db: Session = Depends(get_db), auth: None = Depends(admin_required)):
 
-    device = db.query(models.Device).get(device_id)
+    # Phase U2: Query with eager loading
+    device = db.query(Device).options(joinedload(Device.device_type)).filter(Device.id == device_id).first()
     if not device:
         raise HTTPException(status_code=404, detail="Device not found")
 
     old_type = device.deviceType
     old_name = device.deviceName
-    
-    # check if has the same device name  
-    # existing_name = db.query(models.Device).filter(
-    #     models.Device.id != device_id,
-    #     models.Device.deviceName == update.deviceName
-    # ).first()
-
-    # if existing_name:
-    #     raise HTTPException(status_code=400, detail="Device with this name already exists")
      
-    # Check if IP address already exists on another device
-
-    existing_polatis = db.query(models.Device).filter(
-        models.Device.id         != device_id,
-        models.Device.deviceType == update.deviceType,
-        models.Device.deviceName == update.deviceName,
-        models.Device.polatis_name == update.polatis_name
-    ).first()
+    # Phase U2: Check if polatis exists with JOIN
+    existing_polatis = (
+        db.query(Device)
+        .join(DeviceType)
+        .filter(
+            Device.id != device_id,
+            DeviceType.name == update.deviceType,
+            Device.name == update.deviceName,
+            Device.polatis_name == update.polatis_name
+        )
+        .first()
+    )
 
     if existing_polatis:
         raise HTTPException(status_code=400, detail="Polatis name already exists in this device group")
 
-    existing_ip_conflict = db.query(models.Device).filter(
-        models.Device.id         != device_id,
-        models.Device.ip_address == str(update.ip_address),
-        or_(
-            models.Device.deviceType != update.deviceType,
-            models.Device.deviceName != update.deviceName,
+    # Phase U2: Check IP conflict with JOIN
+    if update.ip_address:
+        existing_ip_conflict = (
+            db.query(Device)
+            .join(DeviceType)
+            .filter(
+                Device.id != device_id,
+                Device.mgmt_ip == str(update.ip_address),
+                or_(
+                    DeviceType.name != update.deviceType,
+                    Device.name != update.deviceName,
+                )
+            )
+            .first()
         )
-    ).first()
 
-    if existing_ip_conflict:
-        raise HTTPException(status_code=400, detail="IP address already exists for another device")
+        if existing_ip_conflict:
+            raise HTTPException(status_code=400, detail="IP address already exists for another device")
 
-    db.query(models.Device).filter(
-        models.Device.deviceType == old_type,
-        models.Device.deviceName == old_name
-    ).update(
-        { models.Device.ip_address: str(update.ip_address) if update.ip_address else None },
-        synchronize_session=False
+    # Phase U2: Bulk update with JOIN (update all devices with same type/name)
+    (
+        db.query(Device)
+        .join(DeviceType)
+        .filter(
+            DeviceType.name == old_type,
+            Device.name == old_name
+        )
+        .update(
+            {Device.mgmt_ip: str(update.ip_address) if update.ip_address else None},
+            synchronize_session=False
+        )
     )
     
+    # Update device properties
+    # deviceType setter was removed - must handle lookup in router
+    if update.deviceType != device.deviceType:
+        new_device_type = db.query(DeviceType).filter(DeviceType.name == update.deviceType).first()
+        if not new_device_type:
+            raise HTTPException(
+                status_code=400,
+                detail=f"DeviceType '{update.deviceType}' not found. Please create it via inventory API first."
+            )
+        device.device_type = new_device_type
+    
     device.status = update.status
-    device.deviceType = update.deviceType
     device.deviceName = update.deviceName
     device.maintenance_start = update.maintenance_start
     device.maintenance_end = update.maintenance_end  

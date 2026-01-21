@@ -1,10 +1,13 @@
 # router.py - Inventory Management REST API Endpoints
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Query, Request, File, UploadFile
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_, func
 from typing import List, Optional
 from datetime import datetime
+import shutil
+import os
 
 from backend.core.deps import get_db
 from backend.inventory import models, schemas
@@ -1104,4 +1107,130 @@ def _device_history_to_response(history: models.DeviceHistory, db: Session) -> s
         notes=history.notes,
         extra=history.extra,
         created_at=history.created_at,
+    )
+
+# ================== Attachment Management ==================
+
+UPLOAD_DIR = "/app/uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+@router.post("/devices/{device_id}/attachments", response_model=schemas.DeviceResponse)
+def upload_attachment(
+    device_id: int,
+    request: Request,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    """Upload an attachment for a device"""
+    user_id = get_current_user_id(request)
+    
+    device = db.query(InventoryDevice).get(device_id)
+    if not device:
+        raise HTTPException(status_code=404, detail="Device not found")
+
+    # Generate safe filename
+    # Prefix with device_id to avoid collisions or grouping
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    safe_filename = f"{device_id}_{timestamp}_{file.filename}"
+    file_path = os.path.join(UPLOAD_DIR, safe_filename)
+    
+    try:
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save file: {str(e)}")
+        
+    # Determine file type
+    content_type = file.content_type
+    file_type = "document"
+    if "image" in content_type:
+        file_type = "image"
+    
+    # DB Record
+    attachment = models.DeviceAttachment(
+        device_id=device_id,
+        file_name=file.filename,
+        file_path=file_path,
+        file_type=file_type,
+        mime_type=content_type,
+        size_bytes=os.path.getsize(file_path),
+        uploaded_by_id=user_id
+    )
+    db.add(attachment)
+    db.commit()
+    db.refresh(device)
+    
+    # History
+    history = models.DeviceHistory(
+        device_id=device.id,
+        action="attachment_added",
+        changed_by_id=user_id,
+        notes=f"Added attachment: {file.filename}"
+    )
+    db.add(history)
+    db.commit()
+    
+    return _device_to_response(device, db)
+
+@router.delete("/attachments/{attachment_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_attachment(
+    attachment_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    """Delete an attachment"""
+    user_id = get_current_user_id(request)
+    
+    attachment = db.query(models.DeviceAttachment).get(attachment_id)
+    if not attachment:
+        raise HTTPException(status_code=404, detail="Attachment not found")
+        
+    device_id = attachment.device_id
+    file_path = attachment.file_path
+    file_name = attachment.file_name
+    
+    # Check permissions (assuming only logged in users can delete, maybe enforce admin?)
+    # For now, simplistic check
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Authentication required")
+
+    # Remove file from disk
+    if os.path.exists(file_path):
+        try:
+            os.remove(file_path)
+        except Exception as e:
+            # Log error but continue to delete DB record
+            print(f"Error removing file {file_path}: {e}")
+            
+    db.delete(attachment)
+    
+    # History
+    history = models.DeviceHistory(
+        device_id=device_id,
+        action="attachment_deleted",
+        changed_by_id=user_id,
+        notes=f"Deleted attachment: {file_name}"
+    )
+    db.add(history)
+    
+    db.commit()
+    return None
+
+@router.get("/attachments/{attachment_id}/download")
+def download_attachment(
+    attachment_id: int,
+    db: Session = Depends(get_db),
+):
+    """Download an attachment"""
+    attachment = db.query(models.DeviceAttachment).get(attachment_id)
+    if not attachment:
+        raise HTTPException(status_code=404, detail="Attachment not found")
+        
+    if not os.path.exists(attachment.file_path):
+        raise HTTPException(status_code=404, detail="File missing on server")
+        
+    return FileResponse(
+        attachment.file_path, 
+        filename=attachment.file_name, 
+        media_type=attachment.mime_type
     )

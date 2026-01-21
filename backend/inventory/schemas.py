@@ -15,6 +15,11 @@ class DeviceStatus(str, Enum):
     RETIRED = "retired"
     SPARE = "spare"
     PLANNED = "planned"
+    
+    # Legacy Statuses
+    AVAILABLE = "Available"
+    MAINTENANCE = "Maintenance"
+    UNAVAILABLE = "Unavailable"
 
 
 # ================== DeviceType Schemas ==================
@@ -209,6 +214,20 @@ class DeviceBase(BaseModel):
     mgmt_ip: Optional[IPvAnyAddress] = None
     polatis_name: Optional[str] = Field(None, max_length=100)
     polatis_port_range: Optional[str] = Field(None, max_length=100)
+    
+    # Scheduler compatibility: maintenance tracking
+    # Format: "All Day/YYYY-MM-DD" or "7 AM - 12 PM/YYYY-MM-DD"
+    maintenance_start: Optional[str] = Field(
+        None,
+        max_length=100,
+        regex=r"^((7 AM - 12 PM|12 PM - 6 PM|6 PM - 11 PM|All Day)/\d{4}-\d{2}-\d{2})?$"
+    )
+    maintenance_end: Optional[str] = Field(
+        None,
+        max_length=100,
+        regex=r"^((7 AM - 12 PM|12 PM - 6 PM|6 PM - 11 PM|All Day)/\d{4}-\d{2}-\d{2})?$"
+    )
+    
     owner_group: Optional[str] = Field(None, max_length=100)
     notes: Optional[str] = None
 
@@ -234,6 +253,16 @@ class DeviceUpdate(BaseModel):
     mgmt_ip: Optional[IPvAnyAddress] = None
     polatis_name: Optional[str] = Field(None, max_length=100)
     polatis_port_range: Optional[str] = Field(None, max_length=100)
+    maintenance_start: Optional[str] = Field(
+        None,
+        max_length=100,
+        regex=r"^((7 AM - 12 PM|12 PM - 6 PM|6 PM - 11 PM|All Day)/\d{4}-\d{2}-\d{2})?$"
+    )
+    maintenance_end: Optional[str] = Field(
+        None,
+        max_length=100,
+        regex=r"^((7 AM - 12 PM|12 PM - 6 PM|6 PM - 11 PM|All Day)/\d{4}-\d{2}-\d{2})?$"
+    )
     owner_group: Optional[str] = Field(None, max_length=100)
     notes: Optional[str] = None
 

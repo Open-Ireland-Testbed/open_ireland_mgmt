@@ -10,7 +10,7 @@ services:
       - BACKEND_PORT=20001
       - FRONTEND_URL=http://localhost:25002
       - DEBUG=True
-      - DATABASE_URL=mysql+pymysql://openireland:ChangeMe_Dev123%21@172.17.0.1:3306/provdb_dev
+      - DATABASE_URL=mysql+pymysql://openireland:ChangeMe_Dev123%21@10.10.10.4:3306/provdb_dev
     volumes:
       - ./backend:/app/backend
     ports:

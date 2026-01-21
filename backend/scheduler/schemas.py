@@ -318,6 +318,7 @@ class DeviceRow(BaseModel):
     name: str
     type: str
     status: str
+    
     owner: Optional[DeviceOwnerSummary] = None
     last_updated: Optional[datetime] = None
     tags: List[str] = Field(default_factory=list)
@@ -469,6 +470,7 @@ class DeviceResponse(BaseModel):
     )
     Out_Port: int
     In_Port: int
+
 
     class Config:
         orm_mode = True

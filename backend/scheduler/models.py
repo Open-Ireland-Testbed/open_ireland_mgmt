@@ -35,6 +35,10 @@ class User(Base):
     )
 
 
+
+# ============================================================================
+# LEGACY DEVICE MODEL - RESTORED
+# ============================================================================
 class Device(Base):
     __tablename__ = "device_table"
     id = Column(Integer, primary_key=True, index=True)
@@ -53,6 +57,15 @@ class Device(Base):
     bookings = relationship("Booking", back_populates="device")
 
 
+# from backend.inventory.models import InventoryDevice
+# from sqlalchemy.orm import relationship
+
+# Alias InventoryDevice as Device for backward compatibility
+# We define a dummy class or just use the import.
+# Using the import directly is better, but we must update the string reference in Booking.
+# Device = InventoryDevice
+
+
 class Booking(Base):
     __tablename__ = "booking_table"
 
@@ -68,6 +81,7 @@ class Booking(Base):
     collaborators = Column(JSON, nullable=True, default=list)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
 
+    # Point to InventoryDevice explicitly because "Device" alias might not be in registry
     device = relationship("Device", back_populates="bookings")
     user = relationship("User", back_populates="bookings")
 

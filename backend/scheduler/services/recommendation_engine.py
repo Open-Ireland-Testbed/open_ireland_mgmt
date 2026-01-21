@@ -1,11 +1,10 @@
 """
-Recommendation Engine Module
+Recommendation Engine for Device Scheduling
 
-This module provides:
-1. Historical booking outcome tracking and analysis
-2. Lightweight ML model for fit_score adjustments and performance prediction
-3. Availability forecasting
-4. Topology configuration recommendations
+Provides fit-score based device recommendations using:
+- Historical booking patterns
+- Device availability
+- Topology constraints
 """
 
 from typing import List, Dict, Optional, Tuple
@@ -13,6 +12,8 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_, func
 from collections import defaultdict
+# Phase U2: Import InventoryDevice for unified device management
+from backend.inventory.models import InventoryDevice
 from backend.scheduler import models
 import statistics
 import math

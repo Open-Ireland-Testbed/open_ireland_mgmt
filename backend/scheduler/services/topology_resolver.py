@@ -11,8 +11,10 @@ This module implements a real topology-matching engine that:
 import networkx as nx
 from typing import List, Dict, Optional, Tuple, Set
 from datetime import datetime
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import and_, or_
+# Phase U2: Import InventoryDevice as Device for unified device management
+from backend.inventory.models import InventoryDevice as Device
 from backend.scheduler import models
 from collections import defaultdict
 import itertools
@@ -40,8 +42,8 @@ class TopologyResolver:
         """
         G = nx.Graph()
         
-        # Query all devices
-        devices = self.db.query(models.Device).all()
+        # Phase U2: Query all devices with eager loading
+        devices = self.db.query(Device).options(joinedload(Device.device_type)).all()
         
         # Query all active bookings for the date range
         overlapping_bookings = (
